@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Rutinas sencillas para principiantes desde casa.">
+    <meta name="theme-color" content="#071d49">
+    <title>Tu Entrenador IA</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+</head>
+<body>
+    <header class="encabezado">
+        <div class="marca">
+            <img src="/assets/logo.png" alt="Logotipo de Tu Entrenador IA">
+            <div>
+                <p class="marca-nombre">Tu Entrenador IA</p>
+                <p class="marca-frase">Empieza hoy, desde casa.</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="pagina">
+        <section id="bienvenida" class="tarjeta bienvenida" aria-labelledby="titulo">
+            <div class="bienvenida-contenido">
+                <p class="etiqueta">Rutinas en casa para principiantes</p>
+                <h1 id="titulo">Comienza a entrenar de forma sencilla</h1>
+                <p class="introduccion">
+                    Coach IA te hará unas preguntas y preparará una rutina de
+                    ejercicios con peso corporal, adaptada a tu objetivo y tiempo.
+                </p>
+
+                <details class="politicas">
+                    <summary>Políticas y recomendaciones de seguridad</summary>
+                    <p>
+                        Las rutinas son informativas y no sustituyen la asesoría de
+                        un médico, fisioterapeuta o entrenador profesional.
+                    </p>
+                    <p>
+                        Realizas la actividad voluntariamente y bajo tu
+                        responsabilidad. Detente si presentas dolor intenso, mareo
+                        o dificultad para respirar.
+                    </p>
+                </details>
+
+                <label class="aceptacion">
+                    <input id="aceptarPoliticas" type="checkbox">
+                    <span>He leído y acepto las políticas de uso.</span>
+                </label>
+
+                <button id="iniciarChat" class="boton boton-principal" type="button" disabled>
+                    Comenzar a entrenar
+                </button>
+            </div>
+
+            <div class="bienvenida-imagen" aria-hidden="true">
+                <img src="/assets/logo.png" alt="">
+            </div>
+        </section>
+
+        <section id="chat" class="tarjeta chat" aria-labelledby="chatTitulo" hidden>
+            <header class="chat-encabezado">
+                <div>
+                    <p class="etiqueta">Asistente virtual</p>
+                    <h2 id="chatTitulo">Coach IA</h2>
+                </div>
+                <button id="limpiarChat" class="boton boton-secundario" type="button">
+                    Limpiar
+                </button>
+            </header>
+
+            <div
+                id="mensajes"
+                class="mensajes"
+                role="log"
+                aria-live="polite"
+                aria-relevant="additions"
+            ></div>
+
+            <p id="estado" class="estado" role="status" aria-live="polite"></p>
+
+            <form id="formularioChat" class="formulario-chat">
+                <label for="mensaje" class="solo-lectores">
+                    Escribe un mensaje para Coach IA
+                </label>
+                <textarea
+                    id="mensaje"
+                    name="mensaje"
+                    rows="2"
+                    maxlength="2000"
+                    placeholder="Escribe tu respuesta..."
+                    required
+                ></textarea>
+                <button id="enviarMensaje" class="boton boton-principal" type="submit">
+                    Enviar
+                </button>
+            </form>
+            <p class="ayuda">Enter para enviar · Shift + Enter para una nueva línea</p>
+        </section>
+    </main>
+
+    <footer class="pie">
+        <p>Tu Entrenador IA · Rutinas básicas para principiantes</p>
+    </footer>
+</body>
+</html>
+

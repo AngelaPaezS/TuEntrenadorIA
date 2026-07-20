@@ -1,0 +1,370 @@
+:root {
+    --azul: #071d49;
+    --azul-medio: #12366d;
+    --verde: #45cda5;
+    --verde-oscuro: #16866c;
+    --fondo: #f4f8f7;
+    --blanco: #ffffff;
+    --texto: #152033;
+    --texto-suave: #607086;
+    --borde: #d9e4e1;
+    --error: #a12626;
+    --sombra: 0 18px 50px rgba(7, 29, 73, 0.12);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--texto);
+    background:
+        radial-gradient(circle at top right, rgba(69, 205, 165, 0.18), transparent 34rem),
+        var(--fondo);
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
+
+button,
+textarea,
+input {
+    font: inherit;
+}
+
+.encabezado {
+    width: 100%;
+    padding: 18px clamp(20px, 5vw, 64px);
+    background: var(--blanco);
+    border-bottom: 1px solid var(--borde);
+}
+
+.marca {
+    display: flex;
+    align-items: center;
+    max-width: 1120px;
+    margin: 0 auto;
+    gap: 14px;
+}
+
+.marca img {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 14px;
+}
+
+.marca p {
+    margin: 0;
+}
+
+.marca-nombre {
+    color: var(--azul);
+    font-size: 1.18rem;
+    font-weight: 800;
+}
+
+.marca-frase {
+    color: var(--verde-oscuro);
+    font-size: 0.92rem;
+}
+
+.pagina {
+    width: min(1120px, calc(100% - 32px));
+    margin: clamp(28px, 5vw, 64px) auto;
+}
+
+.tarjeta {
+    overflow: hidden;
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: 24px;
+    box-shadow: var(--sombra);
+}
+
+.bienvenida {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
+}
+
+.bienvenida-contenido {
+    padding: clamp(30px, 6vw, 70px);
+}
+
+.bienvenida-imagen {
+    display: grid;
+    min-height: 480px;
+    place-items: center;
+    padding: 36px;
+    background: linear-gradient(145deg, #effbf7, #d7f7ed);
+}
+
+.bienvenida-imagen img {
+    width: min(100%, 330px);
+    border-radius: 28px;
+    box-shadow: 0 20px 45px rgba(7, 29, 73, 0.16);
+}
+
+.etiqueta {
+    margin: 0 0 8px;
+    color: var(--verde-oscuro);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+h1,
+h2 {
+    color: var(--azul);
+    line-height: 1.12;
+}
+
+h1 {
+    max-width: 680px;
+    margin: 0;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+}
+
+h2 {
+    margin: 0;
+    font-size: 1.55rem;
+}
+
+.introduccion {
+    max-width: 650px;
+    margin: 24px 0;
+    color: var(--texto-suave);
+    font-size: 1.06rem;
+}
+
+.politicas {
+    margin: 24px 0 18px;
+    padding: 14px 16px;
+    background: #f7faf9;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+}
+
+.politicas summary {
+    color: var(--azul-medio);
+    cursor: pointer;
+    font-weight: 700;
+}
+
+.politicas p {
+    margin: 12px 0 0;
+    color: var(--texto-suave);
+    font-size: 0.92rem;
+}
+
+.aceptacion {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.aceptacion input {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--verde-oscuro);
+}
+
+.boton {
+    min-height: 46px;
+    padding: 11px 20px;
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 800;
+    transition: transform 150ms ease, background-color 150ms ease;
+}
+
+.boton:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.boton:focus-visible,
+textarea:focus-visible,
+input:focus-visible,
+summary:focus-visible {
+    outline: 3px solid rgba(69, 205, 165, 0.45);
+    outline-offset: 2px;
+}
+
+.boton:disabled {
+    cursor: not-allowed;
+    opacity: 0.48;
+}
+
+.boton-principal {
+    color: var(--azul);
+    background: var(--verde);
+}
+
+.boton-principal:hover:not(:disabled) {
+    background: #5bd9b3;
+}
+
+.boton-secundario {
+    color: var(--azul);
+    background: #edf4f2;
+}
+
+.chat {
+    max-width: 860px;
+    margin: 0 auto;
+}
+
+.chat-encabezado {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px clamp(20px, 4vw, 34px);
+    border-bottom: 1px solid var(--borde);
+}
+
+.mensajes {
+    display: flex;
+    flex-direction: column;
+    min-height: 360px;
+    max-height: 58vh;
+    padding: 28px clamp(18px, 4vw, 34px);
+    gap: 16px;
+    overflow-y: auto;
+    background: #fbfdfc;
+}
+
+.mensaje {
+    width: fit-content;
+    max-width: min(78%, 660px);
+    padding: 13px 16px;
+    border-radius: 16px;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.mensaje-coach {
+    align-self: flex-start;
+    color: var(--texto);
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-bottom-left-radius: 5px;
+}
+
+.mensaje-usuario {
+    align-self: flex-end;
+    color: var(--blanco);
+    background: var(--azul-medio);
+    border-bottom-right-radius: 5px;
+}
+
+.estado {
+    min-height: 24px;
+    margin: 0;
+    padding: 5px clamp(20px, 4vw, 34px);
+    color: var(--texto-suave);
+    font-size: 0.88rem;
+}
+
+.estado-error {
+    color: var(--error);
+}
+
+.formulario-chat {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 12px clamp(18px, 4vw, 34px) 8px;
+    gap: 12px;
+    border-top: 1px solid var(--borde);
+}
+
+textarea {
+    width: 100%;
+    min-height: 52px;
+    max-height: 160px;
+    padding: 13px 14px;
+    resize: vertical;
+    color: var(--texto);
+    background: var(--blanco);
+    border: 1px solid #b9c9c5;
+    border-radius: 12px;
+}
+
+.ayuda {
+    margin: 0;
+    padding: 0 clamp(18px, 4vw, 34px) 18px;
+    color: var(--texto-suave);
+    font-size: 0.78rem;
+}
+
+.pie {
+    padding: 12px 20px 28px;
+    color: var(--texto-suave);
+    text-align: center;
+    font-size: 0.84rem;
+}
+
+.solo-lectores {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 760px) {
+    .bienvenida {
+        grid-template-columns: 1fr;
+    }
+
+    .bienvenida-imagen {
+        display: none;
+    }
+
+    .pagina {
+        width: min(100% - 20px, 680px);
+        margin: 18px auto;
+    }
+
+    .tarjeta {
+        border-radius: 18px;
+    }
+
+    .mensajes {
+        min-height: 330px;
+        max-height: 55vh;
+    }
+
+    .mensaje {
+        max-width: 90%;
+    }
+
+    .formulario-chat {
+        grid-template-columns: 1fr;
+    }
+
+    .formulario-chat .boton {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+    }
+}
+

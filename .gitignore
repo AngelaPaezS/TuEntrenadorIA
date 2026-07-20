@@ -1,0 +1,28 @@
+# Entornos virtuales y dependencias locales.
+.venv/
+venv/
+
+# Archivos generados por Python.
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Resultados de herramientas de calidad y pruebas.
+.coverage
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.cache/
+.tmp/
+
+# Configuración local y secretos.
+.env
+.env.*
+!.env.example
+
+# Archivos temporales del sistema y editores.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
