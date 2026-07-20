@@ -1,4 +1,12 @@
-# Tu Entrenador IA
+<p align="center">
+  <img src="web/assets/logo.png" alt="Tu Entrenador IA" width="220">
+</p>
+
+<h1 align="center">Tu Entrenador IA</h1>
+
+<p align="center">
+  Agente de inteligencia artificial para generar rutinas de entrenamiento en casa para principiantes.
+</p>
 
 Agente conversacional construido con LangChain y Cohere. Lee la base documental,
 responde preguntas con fuentes y genera rutinas para principiantes mediante un
