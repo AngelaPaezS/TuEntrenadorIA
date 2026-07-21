@@ -242,3 +242,9 @@ para construir rutinas.
 - La API limita mensajes por IP para reducir el consumo abusivo de Cohere.
 - Los documentos de `documents/` son públicos porque el repositorio de GitHub es
   público.
+
+## Enlace a mi proyecto
+
+https://tuentrenadoria.onrender.com/
+
+<img width="1591" height="937" alt="image" src="https://github.com/user-attachments/assets/8df86267-78a6-4ce9-9d20-a361b9b89198" />
