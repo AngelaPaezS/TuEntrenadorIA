@@ -17,6 +17,7 @@ from .coach import CoachIA
 from .langchain_agent import AgentExecutionError
 from .retrieval import DocumentCorpus
 from .settings import CohereSettings
+from .web_rate_limit import InMemoryRateLimiter
 from .web_sessions import WebAgentFactory, WebSessionStore
 
 
@@ -57,6 +58,7 @@ def create_web_app(
     project_directory: Path,
     coach: CoachIA | None = None,
     session_store: WebSessionStore | None = None,
+    rate_limiter: InMemoryRateLimiter | None = None,
 ) -> FastAPI:
     """Construye la API con dependencias reales o dobles para pruebas."""
 
@@ -76,6 +78,7 @@ def create_web_app(
         session_store = WebSessionStore(agent_factory.create)
 
     store = session_store
+    limiter = rate_limiter or InMemoryRateLimiter()
 
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
@@ -86,7 +89,7 @@ def create_web_app(
 
     app = FastAPI(
         title="Tu Entrenador IA",
-        version="0.3.0",
+        version="0.4.0",
         docs_url=None,
         redoc_url=None,
         openapi_url=None,
@@ -131,18 +134,28 @@ def create_web_app(
 
     @app.get("/api/health")
     async def health() -> dict[str, str]:
-        """Permite a OCI comprobar que el proceso está disponible."""
+        """Permite a Render comprobar que el proceso está disponible."""
 
         return {"status": "ok"}
 
     @app.post("/api/chat", response_model=ChatResponse)
-    async def chat(payload: ChatRequest) -> ChatResponse:
+    async def chat(request: Request, payload: ChatRequest) -> ChatResponse:
         """Envía el mensaje al agente de la sesión sin bloquear el servidor."""
 
         if not payload.accepted_policies:
             raise HTTPException(
                 status_code=403,
                 detail="Debes aceptar las políticas antes de iniciar el chat.",
+            )
+        retry_after = limiter.retry_after(_client_identifier(request))
+        if retry_after is not None:
+            raise HTTPException(
+                status_code=429,
+                detail=(
+                    "Has enviado demasiados mensajes. "
+                    "Espera un momento antes de intentarlo nuevamente."
+                ),
+                headers={"Retry-After": str(retry_after)},
             )
         session_id, answer = await asyncio.to_thread(
             store.ask,
@@ -160,3 +173,9 @@ def create_web_app(
 
     app.mount("/", StaticFiles(directory=web_directory, html=True), name="web")
     return app
+
+
+def _client_identifier(request: Request) -> str:
+    """Obtiene la IP validada por Uvicorn sin confiar directamente en cabeceras."""
+
+    return request.client.host if request.client is not None else "desconocido"

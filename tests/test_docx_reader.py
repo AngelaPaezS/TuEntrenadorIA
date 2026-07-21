@@ -6,7 +6,7 @@ import unittest
 from tu_entrenador_ia.docx_reader import BlockKind, read_docx
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 class DocxReaderTests(unittest.TestCase):

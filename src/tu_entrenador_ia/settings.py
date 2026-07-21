@@ -18,7 +18,7 @@ class ConfigurationError(RuntimeError):
 
 @dataclass(frozen=True, slots=True)
 class WebSettings:
-    """Dirección y puerto usados por el servidor web local o en OCI."""
+    """Dirección y puerto usados por el servidor web local o en Render."""
 
     host: str = "127.0.0.1"
     port: int = 8_000
@@ -34,7 +34,9 @@ class WebSettings:
             or ""
         ).strip()
         raw_port = str(
-            os.environ.get("WEB_PORT", file_values.get("WEB_PORT", "8000"))
+            os.environ.get("PORT")
+            or os.environ.get("WEB_PORT")
+            or file_values.get("WEB_PORT", "8000")
             or ""
         ).strip()
         if not host:
@@ -42,9 +44,13 @@ class WebSettings:
         try:
             port = int(raw_port)
         except ValueError as exc:
-            raise ConfigurationError("WEB_PORT debe ser un número entero.") from exc
+            raise ConfigurationError(
+                "PORT o WEB_PORT debe ser un número entero."
+            ) from exc
         if not 1 <= port <= 65_535:
-            raise ConfigurationError("WEB_PORT debe estar entre 1 y 65535.")
+            raise ConfigurationError(
+                "PORT o WEB_PORT debe estar entre 1 y 65535."
+            )
         return cls(host=host, port=port)
 
 

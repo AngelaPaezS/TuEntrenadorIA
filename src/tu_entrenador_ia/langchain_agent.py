@@ -44,7 +44,7 @@ class LangChainCoachAgent:
             model=settings.model,
             temperature=settings.temperature,
             timeout_seconds=settings.timeout_seconds,
-            user_agent="tu-entrenador-ia/0.3.0",
+            user_agent="tu-entrenador-ia/0.4.0",
         )
         tools = _build_tools(coach, corpus)
         self._graph = create_agent(

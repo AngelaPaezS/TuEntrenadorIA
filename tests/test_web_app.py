@@ -9,10 +9,11 @@ import httpx
 
 from tu_entrenador_ia.langchain_agent import AgentExecutionError
 from tu_entrenador_ia.web_app import create_web_app
+from tu_entrenador_ia.web_rate_limit import InMemoryRateLimiter
 from tu_entrenador_ia.web_sessions import WebSessionStore
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 class _FakeWebAgent:
@@ -74,7 +75,7 @@ class WebAppTests(unittest.IsolatedAsyncioTestCase):
         )
 
     async def test_health_endpoint_and_security_headers(self) -> None:
-        """OCI debe recibir salud y el navegador encabezados defensivos."""
+        """Render debe recibir salud y el navegador encabezados defensivos."""
 
         response = await self.client.get("/api/health")
         self.assertEqual({"status": "ok"}, response.json())
@@ -144,6 +145,37 @@ class WebAppTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(502, response.status_code)
         self.assertNotIn("interno simulado", response.text)
+
+    async def test_chat_rate_limit_protects_external_api(self) -> None:
+        """Una IP no debe poder consumir Cohere sin un límite básico."""
+
+        application = create_web_app(
+            documents_directory=DOCUMENTS_DIR,
+            project_directory=PROJECT_ROOT,
+            session_store=WebSessionStore(_FakeWebAgent),
+            rate_limiter=InMemoryRateLimiter(
+                max_requests=1,
+                window_seconds=60,
+            ),
+        )
+        client = httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=application),
+            base_url="http://testserver",
+        )
+        try:
+            payload = {
+                "message": "Hola",
+                "session_id": None,
+                "accepted_policies": True,
+            }
+            first = await client.post("/api/chat", json=payload)
+            self.assertEqual(200, first.status_code)
+            limited = await client.post("/api/chat", json=payload)
+        finally:
+            await client.aclose()
+
+        self.assertEqual(429, limited.status_code)
+        self.assertEqual("60", limited.headers["retry-after"])
 
     async def _chat(
         self,

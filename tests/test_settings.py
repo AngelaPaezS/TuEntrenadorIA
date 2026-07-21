@@ -64,9 +64,26 @@ class CohereSettingsTests(unittest.TestCase):
         """Sin valores explícitos, el servidor solo debe escuchar localmente."""
 
         (self.directory / ".env").write_text("", encoding="utf-8")
-        settings = WebSettings.from_project(self.directory)
+        with patch.dict("os.environ", {}, clear=True):
+            settings = WebSettings.from_project(self.directory)
         self.assertEqual("127.0.0.1", settings.host)
         self.assertEqual(8_000, settings.port)
+
+    def test_render_port_takes_precedence(self) -> None:
+        """El puerto inyectado por Render debe prevalecer sobre el archivo local."""
+
+        (self.directory / ".env").write_text(
+            "WEB_HOST=127.0.0.1\nWEB_PORT=8000\n",
+            encoding="utf-8",
+        )
+        with patch.dict(
+            "os.environ",
+            {"WEB_HOST": "0.0.0.0", "WEB_PORT": "9000", "PORT": "10000"},
+            clear=True,
+        ):
+            settings = WebSettings.from_project(self.directory)
+        self.assertEqual("0.0.0.0", settings.host)
+        self.assertEqual(10_000, settings.port)
 
 
 if __name__ == "__main__":

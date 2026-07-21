@@ -8,46 +8,63 @@
   Agente de inteligencia artificial para generar rutinas de entrenamiento en casa para principiantes.
 </p>
 
-Agente conversacional construido con LangChain y Cohere. Lee la base documental,
-responde preguntas con fuentes y genera rutinas para principiantes mediante un
-motor de reglas que solo utiliza los ejercicios autorizados.
+Aplicación conversacional construida con LangChain, Cohere y FastAPI. Consulta
+una base documental, responde preguntas y genera rutinas mediante un motor de
+reglas que solo utiliza los ejercicios autorizados.
 
 ## Capacidades
 
 - Agente creado con `langchain.agents.create_agent`.
-- Modelo Cohere conectado mediante `langchain-cohere`.
+- Modelo de lenguaje conectado mediante `langchain-cohere`.
 - Lectura local de PDF, Word, Excel, CSV, PowerPoint, TXT y Markdown.
-- Fragmentación con `RecursiveCharacterTextSplitter`.
+- Extracción estructurada de los documentos Word del dominio.
 - Recuperación BM25 local sin costo de embeddings.
-- Caché invalidada automáticamente cuando cambia un archivo.
-- Herramientas cerradas para consultar fuentes, políticas y ejercicios.
+- Caché actualizada automáticamente cuando cambia un documento.
 - Generación determinista de rutinas con validaciones de seguridad.
-- Historial conversacional guardado únicamente en memoria.
-- Interfaz web adaptable construida solamente con HTML, CSS y JavaScript.
-- API privada con FastAPI para comunicar la página con el agente.
+- Interfaz adaptable construida solamente con HTML, CSS y JavaScript.
+- API FastAPI con sesiones temporales y aisladas.
+- Límite gratuito de diez mensajes por minuto y dirección IP.
+- Configuración reproducible para Render mediante `render.yaml`.
 
-## Estructura de carpetas
+## Estructura
 
 ```text
-AGENTE IA 2.0/
-├── documentos Word y logotipo        # Base de información
-└── TuEntrenadorIA/                    # Programa
-    ├── .env                           # Credencial local, ignorada por Git
-    ├── .env.example                   # Plantilla sin secretos
-    ├── .venv/                         # Entorno virtual, ignorado por Git
-    ├── docs/
-    ├── src/tu_entrenador_ia/
-    ├── tests/
-    └── web/                           # Interfaz HTML, CSS, JavaScript y logotipo
+TuEntrenadorIA/
+├── documents/                     # Seis documentos Word publicados
+├── docs/
+├── src/tu_entrenador_ia/
+├── tests/
+├── web/                           # HTML, CSS, JavaScript y logotipo
+├── .env.example                   # Plantilla local sin secretos
+├── .gitignore                     # Excluye .env, cachés y entorno virtual
+├── pyproject.toml                 # Proyecto y dependencias de Python
+└── render.yaml                    # Servicio web gratuito de Render
 ```
+
+Los documentos de `documents/` forman parte de este repositorio público y pueden
+ser descargados por cualquier persona. La API key de Cohere no forma parte del
+repositorio.
+
+## Requisitos locales
+
+- Python 3.11 o superior. El despliegue está fijado a Python 3.13.3, que es la
+  versión con la que se validó el proyecto.
+- Una API key de Cohere.
+- PowerShell para seguir los ejemplos de Windows.
 
 ## Instalación en Windows
 
-Abre PowerShell en `TuEntrenadorIA` y ejecuta:
+Abre PowerShell dentro de `TuEntrenadorIA` y ejecuta cada comando por separado:
 
 ```powershell
 python -m venv .venv
+```
+
+```powershell
 .\.venv\Scripts\Activate.ps1
+```
+
+```powershell
 python -m pip install -e .
 ```
 
@@ -55,77 +72,130 @@ Si PowerShell bloquea la activación:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-.\.venv\Scripts\Activate.ps1
 ```
 
-## Configuración de Cohere
+Después vuelve a ejecutar el comando de activación.
 
-El archivo `.env` debe contener:
+## Configuración local
+
+Copia `.env.example` como `.env` y registra tu clave:
 
 ```env
 COHERE_API_KEY=tu_clave_real
 COHERE_MODEL=command-a-03-2025
+COACH_DOCS_DIR=documents
 WEB_HOST=127.0.0.1
 WEB_PORT=8000
 ```
 
-No agregues comillas ni espacios alrededor de la clave. No compartas ni subas
-`.env`. Para validar la configuración sin mostrar la credencial:
+No agregues comillas ni espacios alrededor de la clave. El archivo `.env` está
+ignorado por Git y no debe subirse ni compartirse.
+
+Valida la configuración sin mostrar la credencial:
 
 ```powershell
 python -m tu_entrenador_ia check-config
 ```
 
-## Vista web
+## Ejecución local
 
-Desde `TuEntrenadorIA`, con el entorno virtual activo:
+Inicia el servidor:
 
 ```powershell
 python -m tu_entrenador_ia web
 ```
 
-Abre `http://127.0.0.1:8000` en el navegador. Para detener el servidor, vuelve a
-PowerShell y presiona `Ctrl+C`.
+Mantén la terminal abierta y visita:
 
-La página usa únicamente HTML, CSS y JavaScript. La clave de Cohere permanece en
-el backend y nunca se envía al navegador.
-
-## Conversación con el agente
-
-Desde `TuEntrenadorIA`, con el entorno virtual activo:
-
-```powershell
-python -m tu_entrenador_ia chat
+```text
+http://127.0.0.1:8000
 ```
 
-Comandos durante la conversación:
+Presiona `Ctrl+C` en la terminal solamente cuando quieras detenerlo.
 
-- `borrar`: elimina el historial temporal.
-- `salir`: termina el programa.
+## Despliegue gratuito en Render
 
-El agente solicitará nombre, edad, objetivo, días, duración, nivel y aceptación de
-políticas antes de llamar a la herramienta que genera la rutina.
+El repositorio incluye un [Blueprint de Render](render.yaml). No se necesita
+Docker, una base de datos ni un framework adicional para el frontend.
 
-## Comandos locales
+1. Publica este repositorio en GitHub y confirma que `.env` no aparezca entre
+   los archivos.
+2. Crea una cuenta en [Render](https://render.com/).
+3. En el Dashboard selecciona **New > Blueprint**.
+4. Conecta el repositorio público de GitHub.
+5. Render detectará `render.yaml` y solicitará `COHERE_API_KEY`.
+6. Pega la clave únicamente en el campo secreto de Render.
+7. Confirma la creación del servicio `tu-entrenador-ia`.
+8. Espera a que el despliegue termine y abre la dirección `onrender.com` que
+   Render asigne.
 
-Estos comandos no consumen la API de Cohere:
+La configuración ejecuta:
+
+```text
+Build Command: pip install -e .
+Start Command: python -m tu_entrenador_ia web
+Health Check: /api/health
+```
+
+Render proporciona automáticamente `PORT`; la aplicación lo utiliza con
+prioridad sobre `WEB_PORT` y escucha en `0.0.0.0` dentro del servicio.
+
+La documentación oficial relevante es:
+
+- [Desplegar FastAPI en Render](https://render.com/docs/deploy-fastapi)
+- [Puertos de servicios web](https://render.com/docs/web-services#port-binding)
+- [Variables y secretos](https://render.com/docs/configure-environment-variables)
+- [Especificación de Blueprint](https://render.com/docs/blueprint-spec)
+
+### Limitaciones del plan gratuito
+
+- El servicio entra en reposo después de 15 minutos sin tráfico.
+- La primera visita posterior puede tardar aproximadamente un minuto.
+- Las conversaciones están en memoria y se pierden al reiniciar o suspender el
+  servicio.
+- La caché documental también puede reconstruirse, pero los Word permanecen
+  disponibles porque forman parte del repositorio.
+- No se usa almacenamiento persistente ni base de datos.
+- Las claves Trial de Cohere son gratuitas y limitadas, pero Cohere las destina
+  a evaluación y prototipos, no a aplicaciones comerciales o productivas.
+- Si se alcanza el límite gratuito de Cohere, el agente dejará de responder hasta
+  que la cuota vuelva a estar disponible; Render continuará funcionando.
+
+Consulta las [limitaciones oficiales del plan gratuito](https://render.com/docs/free).
+Consulta también los [límites de las claves de Cohere](https://docs.cohere.com/v2/docs/rate-limits)
+y sus [condiciones de precios](https://cohere.com/pricing).
+
+## Actualizar los documentos
+
+Para actualizar la información desplegada:
+
+1. Sustituye los archivos correspondientes dentro de `documents/`.
+2. Conserva sus nombres y el formato Word para mantener la extracción
+   estructurada.
+3. Ejecuta `inspect` y las pruebas.
+4. Confirma los cambios en Git y súbelos a GitHub.
+
+Render realizará un nuevo despliegue y la caché se regenerará al detectar los
+cambios.
+
+## Comandos disponibles
 
 ```powershell
 # Verificar los documentos y el catálogo
 python -m tu_entrenador_ia inspect
 
-# Buscar fragmentos localmente
+# Buscar información sin consumir Cohere
 python -m tu_entrenador_ia ask "¿Qué ejercicios están autorizados?"
 
-# Generar una rutina sin modelo de lenguaje
+# Generar una rutina sin usar el modelo de lenguaje
 python -m tu_entrenador_ia routine
+
+# Conversar en la terminal mediante Cohere
+python -m tu_entrenador_ia chat
 ```
 
-Para usar otra carpeta documental:
-
-```powershell
-python -m tu_entrenador_ia --documents "C:\ruta\documentos" chat
-```
+Durante `chat`, utiliza `borrar` para eliminar la conversación temporal y
+`salir` para terminar.
 
 ## Pruebas
 
@@ -135,8 +205,8 @@ Desde `TuEntrenadorIA`:
 .\.venv\Scripts\python.exe -m unittest discover -s tests -v
 ```
 
-Las pruebas normales simulan servicios externos y no consumen la API. Las pruebas
-de integración reales se ejecutan de forma separada.
+Las pruebas normales simulan servicios externos y no consumen la API. La prueba
+real de Cohere se mantiene separada.
 
 ## Arquitectura
 
@@ -145,43 +215,30 @@ src/tu_entrenador_ia/
 ├── document_loaders.py  # PDF, Word, Excel, CSV, PowerPoint y texto
 ├── retrieval.py         # Fragmentación LangChain, BM25 y caché
 ├── langchain_agent.py   # Agente, Cohere, herramientas y límites
-├── settings.py          # Lectura segura de .env y validación
-├── docx_reader.py       # Extracción estructurada de los Word del dominio
+├── settings.py          # Variables locales, PORT de Render y secretos
+├── docx_reader.py       # Extracción estructurada de Word
 ├── knowledge.py         # Base de conocimiento y catálogo
 ├── models.py            # Datos y validaciones
 ├── routine_engine.py    # Generación determinista de rutinas
 ├── coach.py             # Fachada del dominio
-├── web_sessions.py      # Sesiones web aisladas y temporales
+├── web_sessions.py      # Sesiones aisladas y temporales
+├── web_rate_limit.py    # Protección gratuita por IP
 ├── web_app.py           # API FastAPI y publicación de la interfaz
-└── cli.py               # Comandos de consola y servidor web
-
-web/
-├── assets/logo.png      # Logotipo oficial del proyecto
-├── index.html           # Estructura y contenido de la vista
-├── styles.css           # Diseño adaptable
-└── app.js               # Conversación con la API
+└── cli.py               # Consola y servidor web
 ```
 
-El modelo conversa y selecciona herramientas. No tiene autoridad para crear
-ejercicios o evadir reglas: `routine_engine.py` sigue siendo la única fuente para
-construir rutinas.
+El modelo conversa y selecciona herramientas. No tiene autoridad para inventar
+ejercicios o evadir reglas: `routine_engine.py` es la única fuente autorizada
+para construir rutinas.
 
-## Preparación para OCI
+## Privacidad y seguridad
 
-En una instancia o contenedor de OCI configura:
-
-```env
-WEB_HOST=0.0.0.0
-WEB_PORT=8000
-```
-
-El endpoint `GET /api/health` permite comprobar que la aplicación está activa.
-Las conversaciones son temporales y se reinician cuando se reinicia el proceso;
-esta primera versión debe ejecutarse con un solo proceso.
-
-## Privacidad
-
-La lectura, fragmentación y búsqueda se realizan localmente. Al usar `chat` o la
-vista web, el mensaje del usuario y los fragmentos recuperados que necesita la
-respuesta se envían a Cohere. Nombre, edad e historial no se guardan en disco por
-el programa. La caché contiene texto de los documentos, nunca la API key.
+- La clave de Cohere solo se lee desde `.env` o las variables secretas de
+  Render; nunca se envía al navegador.
+- La lectura, fragmentación y búsqueda de documentos se realizan dentro del
+  servidor.
+- Los mensajes y fragmentos necesarios para responder se envían a Cohere.
+- Nombre, edad e historial no se guardan en una base de datos.
+- La API limita mensajes por IP para reducir el consumo abusivo de Cohere.
+- Los documentos de `documents/` son públicos porque el repositorio de GitHub es
+  público.

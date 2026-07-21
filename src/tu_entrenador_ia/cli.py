@@ -159,7 +159,7 @@ def main(arguments: list[str] | None = None) -> int:
 
 
 def _default_documents_directory() -> Path:
-    """Localiza las fuentes en la configuración, carpeta actual o carpeta padre."""
+    """Localiza las fuentes configuradas, incluidas o cercanas al proyecto."""
 
     configured = os.environ.get("COACH_DOCS_DIR")
     if configured:
@@ -168,6 +168,11 @@ def _default_documents_directory() -> Path:
     current_directory = Path.cwd()
     if any(current_directory.glob("*.docx")):
         return current_directory
+
+    bundled_directory = _project_directory() / "documents"
+    if any(bundled_directory.glob("*.docx")):
+        return bundled_directory
+
     parent_directory = current_directory.parent
     if any(parent_directory.glob("*.docx")):
         return parent_directory

@@ -10,7 +10,7 @@ from tu_entrenador_ia.retrieval import DocumentCorpus
 from tu_entrenador_ia.settings import CohereSettings
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 class LangChainAgentTests(unittest.TestCase):
@@ -85,4 +85,3 @@ class LangChainAgentTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

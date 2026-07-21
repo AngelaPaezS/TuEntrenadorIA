@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: tu-entrenador-ia
+    runtime: python
+    plan: free
+    buildCommand: pip install -e .
+    startCommand: python -m tu_entrenador_ia web
+    healthCheckPath: /api/health
+    envVars:
+      - key: COHERE_API_KEY
+        sync: false
+      - key: COHERE_MODEL
+        value: command-a-03-2025
+      - key: COACH_DOCS_DIR
+        value: documents
+      - key: WEB_HOST
+        value: 0.0.0.0
+      - key: PYTHON_VERSION
+        value: 3.13.3

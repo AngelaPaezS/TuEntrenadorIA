@@ -8,7 +8,7 @@ import unittest
 from tu_entrenador_ia.cli import main
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 class CliTests(unittest.TestCase):
@@ -22,6 +22,15 @@ class CliTests(unittest.TestCase):
             code = main(["--documents", str(DOCUMENTS_DIR), "inspect"])
         self.assertEqual(0, code)
         self.assertIn("Ejercicios autorizados: 20", output.getvalue())
+
+    def test_inspect_finds_bundled_documents_by_default(self) -> None:
+        """Render debe iniciar sin depender de archivos externos al repositorio."""
+
+        output = StringIO()
+        with redirect_stdout(output):
+            code = main(["inspect"])
+        self.assertEqual(0, code)
+        self.assertIn("Documentos leídos: 6", output.getvalue())
 
     def test_complete_routine_command_is_non_interactive(self) -> None:
         """Todos los argumentos permiten integrar el programa en automatizaciones."""

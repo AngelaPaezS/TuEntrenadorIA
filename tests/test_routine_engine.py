@@ -9,7 +9,7 @@ from tu_entrenador_ia.routine_engine import RoutineEngine, all_exercise_names
 from tu_entrenador_ia.text_utils import normalize_text
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 class RoutineEngineTests(unittest.TestCase):

@@ -49,3 +49,18 @@ agente usa LangChain con Cohere para conversar y seleccionar herramientas:
 - Las claves se suministran mediante variables de entorno, nunca en el repositorio.
 - La búsqueda BM25 evita llamadas de embeddings para esta base documental pequeña.
 - La conversación vive en memoria y se elimina al cerrar el proceso.
+
+## Publicación en Render
+
+- El servicio utiliza exclusivamente el plan gratuito de Render.
+- Los seis Word se incluyen en `documents/` porque Render solo recibe los
+  archivos versionados en GitHub.
+- El repositorio es público por requisito del proyecto; por ello, sus documentos
+  también son públicos.
+- `COHERE_API_KEY` se registra como secreto en Render y nunca se confirma en Git.
+- Render proporciona `PORT`; el proceso escucha en `0.0.0.0` usando ese valor.
+- Se ejecuta un solo proceso porque las sesiones y sus candados viven en memoria.
+- El chat admite diez solicitudes por minuto e IP para reducir consumos abusivos.
+- No se agrega una base de datos: reinicios y suspensiones eliminan las sesiones.
+- La clave Trial de Cohere mantiene gratuito el prototipo, sujeto a sus límites y
+  a la prohibición del proveedor para usos comerciales o productivos.

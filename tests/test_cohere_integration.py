@@ -9,7 +9,7 @@ from tu_entrenador_ia.langchain_agent import LangChainCoachAgent
 from tu_entrenador_ia.settings import CohereSettings
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-DOCUMENTS_DIR = PROJECT_ROOT.parent
+DOCUMENTS_DIR = PROJECT_ROOT / "documents"
 
 
 @unittest.skipUnless(
@@ -40,4 +40,3 @@ class CohereIntegrationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
